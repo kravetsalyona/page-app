@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import People from './components/People';
 import Title from './components/Title';
 
@@ -10,7 +10,7 @@ function App() {
   const [people,setPeople] = useState([]);
 
   const execOnce = useRef(false)
-  const loader = useEffect(() => {
+  const loader = useCallback(() => {
     console.log('Страница загружена');
     window.webkit.messageHandlers.jsHandler.postMessage('Page loaded')
 },[])
