@@ -15,6 +15,7 @@ useEffect(() =>{
 
           console.log('Страница загружена');
           console.log(`Image size: ${img.offsetWidth}x${img.offsetHeight}`);
+          window.webkit.messageHandlers.jsHandler.postMessage('Page loaded')
         }
         window.addEventListener('load', loader)
         return () => window.removeEventListener('load', loader)
