@@ -68,16 +68,15 @@ function App() {
   //     fetchPeople();
   // }, [])
   
- return (<>
-    
-    <Title />
-    <img id="img" src={logo} className="App-logo" alt="logo" />
-     <People />
-
-
- </>
-
- )
+ return (<>{
+    window.webkit?.messageHandlers?.jsHandlerDelay?.postMessage ?
+      <>
+        <Title />
+        <img id="img" src={logo} className="App-logo" alt="logo" />
+        <People />
+      </>
+     : <div>window.webkit?.messageHandlers?.jsHandlerDelay?.postMessage - не определён</div>
+    }</>)
 }
 
 export default App;
