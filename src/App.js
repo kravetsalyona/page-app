@@ -4,8 +4,21 @@ import { useEffect, useState, useRef} from "react";
 import People from './components/People';
 import Title from './components/Title';
 
+// if (!window.webkit) {
+//   const webkit = {
+//     messageHandlers: {
+//       jsHandler: {
+//         postMessage: (message) => console.log('message: ', message),
+//       },
+//       jsHandlerDelay: {
+//         postMessage: (message) => console.log('messageDelay: ', message),
+//       }
+//     }
+//   }
+//   window.webkit = webkit; 
+// }
+
 function App() {
-  
   
   // const [people,setPeople] = useState([]);
 
@@ -15,9 +28,10 @@ function App() {
     window.webkit.messageHandlers.jsHandler.postMessage('Page loaded')
 }
   useEffect(() =>{
-    if (!execOnce.current) {
-      window.addEventListener('load', loader)
-    }
+    window.addEventListener('load', loader)
+    // if (!execOnce.current) {
+    //   window.addEventListener('load', loader)
+    // }
     return () => {
       execOnce.current = true;
       window.removeEventListener('load', loader)
@@ -25,16 +39,19 @@ function App() {
   },[])
 
   useEffect(() =>{
-    const loaderDelay = () => { 
-      console.log('Страница загружена with delay 5sec');            
-      window.webkit.messageHandlers.jsHandlerDelay.postMessage('Page loaded with delay 5sec')           
+    const loaderDelay = () => {
+      setTimeout(() => {
+        console.log('Страница загружена with delay 5sec');
+        window.webkit.messageHandlers.jsHandlerDelay.postMessage('Page loaded with delay 5sec')
+      }, 1000);
     }
-    const timeoutId = setTimeout(() => window.addEventListener('load', loaderDelay), 5000)
+
+    window.addEventListener('load', loaderDelay)
+
     return () => {
-      clearTimeout(timeoutId)
       window.addEventListener('load', loaderDelay)
     }
-  },[])      
+  }, [])      
   
 
   // useEffect(()=>{
