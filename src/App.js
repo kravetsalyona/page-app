@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import { useEffect, useState, useRef} from "react";
+import { useLayoutEffect, useState, useRef} from "react";
 import People from './components/People';
 import Title from './components/Title';
 
@@ -22,23 +22,28 @@ function App() {
   
   // const [people,setPeople] = useState([]);
 
-  const execOnce = useRef(false)
+  // const firstLoad = useRef(false)
   const loader = () => {
     console.log('Страница загружена');
     window.webkit.messageHandlers.jsHandler.postMessage('Page loaded')
 }
-  useEffect(() =>{
+// if (!execOnce.current) {
+//   window.addEventListener('load', loader)
+// }
+
+
+  useLayoutEffect(() =>{
     window.addEventListener('load', loader)
     // if (!execOnce.current) {
     //   window.addEventListener('load', loader)
     // }
     return () => {
-      execOnce.current = true;
+      // execOnce.current = true;
       window.removeEventListener('load', loader)
     };
   },[])
 
-  useEffect(() =>{
+  useLayoutEffect(() =>{
     const loaderDelay = () => {
       setTimeout(() => {
         console.log('Страница загружена with delay 5sec');
