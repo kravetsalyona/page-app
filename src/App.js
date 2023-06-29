@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import { useLayoutEffect, useState, useRef} from "react";
+import { useLayoutEffect, useEffect, useState, useRef} from "react";
 import People from './components/People';
 import Title from './components/Title';
 
@@ -19,45 +19,34 @@ import Title from './components/Title';
 // }
 
 function App() {
-  
-  // const [people,setPeople] = useState([]);
+  const [webkitLoaded, setWebkitLoaded] = useState(false)
+  const pageLoadedRef = useRef(false)
 
-  // const firstLoad = useRef(false)
   const loader = () => {
     console.log('Страница загружена');
-    window.webkit.messageHandlers.jsHandler.postMessage('Page loaded')
-}
-// if (!execOnce.current) {
-//   window.addEventListener('load', loader)
-// }
+    pageLoadedRef.current = true;
+  }
 
+  useEffect(() => {
+    if (webkitLoaded && pageLoadedRef.current) {
+      window.webkit.messageHandlers.jsHandler.postMessage('Page loaded');
+    }
+  }, [webkitLoaded, pageLoadedRef])
 
   useLayoutEffect(() =>{
     window.addEventListener('load', loader)
-    // if (!execOnce.current) {
-    //   window.addEventListener('load', loader)
-    // }
+
+    const intervalId = setInterval(() => {
+      if (window.webkit) {
+        setWebkitLoaded(true)
+      }
+    }, 500);
+    
     return () => {
-      // execOnce.current = true;
+      clearInterval(intervalId)
       window.removeEventListener('load', loader)
     };
-  },[])
-
-  useLayoutEffect(() =>{
-    const loaderDelay = () => {
-      setTimeout(() => {
-        console.log('Страница загружена with delay 5sec');
-        window.webkit.messageHandlers.jsHandlerDelay.postMessage('Page loaded with delay 5sec')
-      }, 1000);
-    }
-
-    window.addEventListener('load', loaderDelay)
-
-    return () => {
-      window.addEventListener('load', loaderDelay)
-    }
-  }, [])      
-  
+  },[]) 
 
   // useEffect(()=>{
   //   async function fetchPeople() {
